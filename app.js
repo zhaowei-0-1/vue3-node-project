@@ -7,6 +7,7 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const userRouter = require('./routes/admin/UserRouter');
+const JWT = require('./util/JWT');
 
 var app = express();
 
@@ -27,6 +28,33 @@ app.use('/users', usersRouter);
    /adminapi/* -后台系统
    /webapi/*    -官网门户使用
  */
+// 中间件：
+app.use((req, res, next) => {
+  // 如果，token过期，返回 401错误
+  // 判断是否是login接口
+  if (req.url === "/adminapi/user/login") {
+    next()
+    return;
+  }
+  const token = req.header["authorization"].split(" ")[1] //空格分隔字符串
+  // 如果授权通过 （token有效），next()
+  if (token) {
+    // 校验token
+    var paylode = JWT.verify(token)
+    console.log(paylode, "paylode--")
+    if (paylode) {
+      // const newToken = JWT.generate(paylode, "10s")
+      const newToken = JWT.generate({
+        _id: paylode._id,
+        username: paylode.username
+      }, "1d")
+      res.setHeader("Authorization", newToken)
+      next()
+    } else {
+      res.status(401).send({ errCode: "-1", errorInfo: "token过期" })
+    }
+  }
+})
 app.use(userRouter)
 
 // catch 404 and forward to error handler

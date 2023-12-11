@@ -38,26 +38,26 @@ app.use((req, res, next) => {
   // const authorization = req.header["Authorization"];
   // const token = authorization ? authorization.split(" ")[1] : null;
 
-
+// 可能错误：Authorization未定义的对象上调用split方法
   const token = req.headers["Authorization"].split(" ")[1] //空格分隔字符串
   // // 如果授权通过 （token有效），next()
   if (token) {
-  //   // 校验token
+    //   // 校验token
     var paylode = JWT.verify(token)
-    console.log(paylode, "paylode--")
+    //   console.log(paylode, "paylode--")
     if (paylode) {
-  // const newToken = JWT.generate(paylode, "10s")
-  // const newToken = JWT.generate({
-  //   _id: paylode._id,
-  //   username: paylode.username
-  // }, "1d")
-  // res.setHeader("Authorization", newToken)
-  //       next()
-      } else {
-        // 如果，token过期，返回 401错误
-        res.status(401).send({ errCode: "-1", errorInfo: "token过期" })
-      }
+      // const newToken = JWT.generate(paylode, "10s")
+      const newToken = JWT.generate({
+        _id: paylode._id,
+        username: paylode.username
+      }, "1d")
+      res.setHeader("Authorization", newToken)
+      next()
+    } else {
+      // 如果，token过期，返回 401错误
+      res.status(401).send({ errCode: "-1", errorInfo: "token过期" })
     }
+  }
 })
 app.use(userRouter)
 

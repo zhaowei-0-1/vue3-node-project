@@ -7,5 +7,8 @@ var userRouter = express.Router();
 // 向 /adminapi/user/login 接口中发post 请求，进入UserController中处理
 // 在app.js中注册接口
 userRouter.post("/adminapi/user/login", UserController.login)
+// userRouter.get("/adminapi/user/home", (req, res) => {
+//     res.send({ ok: 1 })
+// })
 
 module.exports = userRouter;

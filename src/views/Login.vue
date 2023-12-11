@@ -38,16 +38,15 @@ const submitForm = () => {
     loginFormRef.value.validate((valid) => {
         // console.log(valid, "valid")
         if (valid) {
-            // console.log(loginForm, "===")
-            // localStorage.setItem("token", "admin");
+
             // 接口连接，并将loginForm传给后端
             axios.post("/adminapi/user/login", loginForm).then(
                 res => {
-                    // console.log(res.data, "=====")
+                    console.log(res.data, "==ActionType===")
                     // ActionType==="ok"登录成功
                     if (res.data.ActionType === "ok") {
-                        console.log(res.data.data,"123==")
-                        router.push("/index")
+                        console.log(res.data.data, "后端返数据")
+                        // router.push("/index")
                         // localStorage.setItem("token", "admin");
                     } else {
                         ElMessage.error('用户名和密码不匹配')

@@ -17,6 +17,7 @@
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 // 表单的响应式对象
 const loginForm = reactive({
     username: "",
@@ -38,12 +39,20 @@ const submitForm = () => {
         // console.log(valid, "valid")
         if (valid) {
             // console.log(loginForm, "===")
-            localStorage.setItem("token", "admin");
-            axios.get("/users").then(res => {
-                console.log(res.data)
-            })
-            router.push("/index")
-
+            // localStorage.setItem("token", "admin");
+            // 接口连接，并将loginForm传给后端
+            axios.post("/adminapi/user/login", loginForm).then(
+                res => {
+                    // console.log(res.data, "=====")
+                    // ActionType==="ok"登录成功
+                    if (res.data.ActionType === "ok") {
+                        console.log(res.data.data,"123==")
+                        router.push("/index")
+                        // localStorage.setItem("token", "admin");
+                    } else {
+                        ElMessage.error('用户名和密码不匹配')
+                    }
+                })
         }
     })
     // 2.拿到表单内容，提交后台
@@ -68,7 +77,7 @@ const submitForm = () => {
         color: #505450;
     }
 
-    ::v-deep .el-form-item__content {
+    :v-deep .el-form-item__content {
         justify-content: center;
     }
 

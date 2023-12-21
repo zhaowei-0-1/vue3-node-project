@@ -37,7 +37,7 @@ const store = useStore()
 // console.log(store.state ,"-store-")
 
 // 计算属性
-const avatarUrl = computed(() => store.state.userInfo.avatar ? store.state.userInfo.avatar : `https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png`)
+const avatarUrl = computed(() => store.state.userInfo.avatar ? 'http://localhost:3000' + store.state.userInfo.avatar : `https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png`)
 const welcomeText = computed(() => new Date().getHours() < 12 ? '早上好，开心每一天！' : '下午好，如果累了，就休息一会吧！')
 
 </script>

@@ -79,7 +79,7 @@ const submitForm = () => {
         color: #505450;
     }
 
-    :v-deep .el-form-item__content {
+    :deep(.el-form-item__content) {
         justify-content: center;
     }
 

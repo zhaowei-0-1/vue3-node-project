@@ -25,7 +25,7 @@ axios.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
 
-    console.log(response.headers,"======H")
+    // console.log(response.headers,"======H")
     // 解构
     const { authorization } = response.headers
     authorization && localStorage.setItem("token", authorization)

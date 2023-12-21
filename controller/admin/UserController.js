@@ -1,6 +1,8 @@
 const { model } = require("mongoose")
 const UserService = require("../../service/admin/UserService")
 const JWT = require("../../util/JWT")
+// const JWT = require("../../util/JWT")
+require("../../util/JWT")
 
 
 const UserController = {
@@ -40,9 +42,39 @@ const UserController = {
         }
     },
 
-    // upload: async (req, res) => {
-    //     console.log(req.body, "req.body1")
-    // }
+    upload: async (req, res) => {
+        console.log(req.body, req.file, "req.body1")
+        const { username, introduction, gender } = req.body
+        const token = req.headers.authorization.split(" ")[1]; //空格分隔字符串
+        const avatar = req.file ? `/avataruploads/${req.file.filename}` : ""
+        // 校验token
+        var paylode = JWT.verify(token)
+        console.log(paylode._id, "paylode")
+
+        // 调用service 模块更新 数据
+        await UserService.upload({
+            _id: paylode._id, username,
+            introduction, gender: Number(gender), avatar
+        })
+        if (avatar) {
+            res.send({
+                ActionType: "OK",
+                data: {
+                    username, introduction,
+                    gender: Number(gender),
+                    avatar
+                }
+            })
+        } else {
+            res.send({
+                ActionType: "OK",
+                data: {
+                    username, introduction,
+                    gender: Number(gender),
+                }
+            })
+        }
+    }
 
 
 

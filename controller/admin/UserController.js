@@ -38,6 +38,13 @@ const UserController = {
                 }
             })
         }
-    }
+    },
+
+    // upload: async (req, res) => {
+    //     console.log(req.body, "req.body1")
+    // }
+
+
+
 }
 module.exports = UserController

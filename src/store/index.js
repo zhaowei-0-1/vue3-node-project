@@ -9,7 +9,8 @@ export default createStore({
     // 属性
 
     isGetterRouter: false, // 是不是第一次登录
-    isCollapse: false
+    isCollapse: false,
+    userInfo: {}
   },
   // 每个 mutation 都有一个字符串的事件类型 (type)和一个回调函数 (handler)
   mutations: {
@@ -21,7 +22,18 @@ export default createStore({
     // 控制侧边栏展开
     changeCollapsed(state) {
       state.isCollapse = !state.isCollapse
-    }
+    },
+
+    changeUserInfo(state, value) {
+      state.userInfo = {
+        ...state.userInfo,
+        ...value
+      }
+    },
+
+    clearUserInfo(state, value) {
+      state.userInfo = {}
+    },
 
   },
   actions: {
@@ -29,6 +41,6 @@ export default createStore({
   modules: {
   },
   plugins: [createPersistedState({
-    paths:["isCollapsed"]//控制是否持久化
+    paths: ["isCollapsed", "userInfo"]//控制是否持久化
   })],
 })

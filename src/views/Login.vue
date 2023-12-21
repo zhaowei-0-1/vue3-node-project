@@ -18,6 +18,8 @@ import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
+import { useStore } from 'vuex';
+const store = useStore()
 // 表单的响应式对象
 const loginForm = reactive({
     username: "",
@@ -45,8 +47,9 @@ const submitForm = () => {
                     console.log(res.data, "==ActionType===")
                     // ActionType==="ok"登录成功
                     if (res.data.ActionType === "ok") {
-                        console.log(res.data.data, "后端返数据")
-                        // router.push("/index")
+                        // console.log(res.data.data, "后端返数据")
+                        store.commit("changeUserInfo", res.data.data)
+                        router.push("/index")
                         // localStorage.setItem("token", "admin");
                     } else {
                         ElMessage.error('用户名和密码不匹配')

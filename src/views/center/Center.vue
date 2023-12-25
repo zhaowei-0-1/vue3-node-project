@@ -26,7 +26,7 @@
                     </el-form-item>
 
                     <el-form-item label="性别" prop="gender">
-                        <el-select v-model="userForm.gender" class="m-2" placeholder="Select" style="width: 100%;">
+                        <el-select v-model="userForm.gender" class="m-2" placeholder="请选择" style="width: 100%;">
                             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                         </el-select>
                     </el-form-item>
@@ -132,32 +132,5 @@ const submitForm = () => {
     .box-card {
         text-align: center;
     }
-}
-
-// 上传头像
-:deep(.avatar-uploader .el-upload) {
-    border: 1px dashed var(--el-border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: var(--el-transition-duration-fast);
-}
-
-:deep(.avatar-uploader .el-upload:hover) {
-    border-color: var(--el-color-primary);
-}
-
-:deep(.el-icon.avatar-uploader-icon) {
-    font-size: 28px;
-    color: #8c939d;
-    width: 178px;
-    height: 178px;
-    text-align: center;
-}
-
-.avatar {
-    width: 178px;
-    height: 178px;
 }
 </style>

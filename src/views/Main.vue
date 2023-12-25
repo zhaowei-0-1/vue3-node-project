@@ -1,8 +1,8 @@
 <template>
   <el-container>
-    <SideMenu/>
+    <SideMenu />
     <el-container direction="vertical">
-     <TopHeader/>
+      <TopHeader />
       <el-main>
         <router-view></router-view>
       </el-main>
@@ -17,3 +17,10 @@
 import TopHeader from '../components/Main/TopHeader.vue';
 import SideMenu from '../components/Main/SideMenu.vue';
 </script>
+
+<style scoped lang="scss">
+.el-main {
+  overflow: auto;
+  height: calc(100vh - 60px);
+}
+</style>

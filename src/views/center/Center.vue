@@ -35,15 +35,7 @@
                         <el-input type="textarea" v-model="userForm.introduction" />
                     </el-form-item>
                     <el-form-item label="头像" prop="avatar">
-                        <el-upload class="avatar-uploader"
-                            action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15" :show-file-list="false"
-                            :auto-upload="false" :on-change="handleChange">
-                            <!-- :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload" -->
-                            <img v-if="userForm.avatar" :src=" 'http://localhost:3000' + userForm.avatar" class="avatar" />
-                            <el-icon v-else class="avatar-uploader-icon">
-                                <Plus />
-                            </el-icon>
-                        </el-upload>
+                        <Upload :avatar="userForm.avatar" @uploadChange="handleChange" />
                     </el-form-item>
 
                     <el-form-item>
@@ -58,8 +50,8 @@
 <script setup>
 import { useStore } from 'vuex';
 import { computed, ref, reactive } from 'vue';
-import { Plus } from '@element-plus/icons-vue';
-import axios from 'axios'
+import upload from '@/util/upload';
+import Upload from '@/components/upload/Upload';
 import { ElMessage } from 'element-plus';
 
 const store = useStore();
@@ -110,34 +102,23 @@ const options = [
     },
 ];
 // 每次选择头像的回调(显示图片)
-const handleChange = (file) => {
+const handleChange = file => {
     // console.log(file.raw, 'file');
-    console.log(URL.createObjectURL(file.raw), 'fileURL');
-    userForm.avatar = URL.createObjectURL(file.raw)
-    userForm.file = file.raw
-}
+    // console.log(URL.createObjectURL(file), 'fileURL');
+    userForm.avatar = URL.createObjectURL(file)
+    userForm.file = file
+};
 
 // 更新提交
 const submitForm = () => {
-    userFormRef.value.validate((valid) => {
+    userFormRef.value.validate(async (valid) => {
         if (valid) {
             // console.log("submit", userForm)
-            const params = new FormData()
-            for (let i in userForm) {
-                params.append(i, userForm[i])
+            const res = await upload("/adminapi/user/upload", userForm)
+            if (res.ActionType === "OK") {
+                store.commit("changeUserInfo", res.data);
+                ElMessage.success("更新成功")
             }
-            // console.log(params, "params")
-            axios.post("/adminapi/user/upload", params, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            }).then(res => {
-                console.log(res.data, "res.data")
-                if (res.data.ActionType === "OK") {
-                    store.commit("changeUserInfo", res.data.data)
-                    ElMessage.success("更新成功")
-                }
-            })
         }
     })
 }

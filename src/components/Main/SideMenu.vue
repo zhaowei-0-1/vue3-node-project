@@ -1,9 +1,9 @@
 <template>
-    <el-aside :width="$store.state.iscollapsed ? '64px' : '120px'">
+    <el-aside :width="$store.state.isCollapsed ? '64px' : '200px'">
         <!-- 侧边栏折叠collapse vuex状态存储 通过 store.state 来获取状态对象  -->
         <!--  :default-active页面加载时默认激活菜单的 -->
-        <el-menu :collapse="$store.state.iscollapsed" :collapse-transition="false" :router="true"
-            :default-active="route.fullPath">
+        <el-menu :collapse="$store.state.isCollapsed" background-color="#48566b" text-color="white"
+            :collapse-transition="false" :router="true" :default-active="route.fullPath">
             <!-- 一级菜单  index高亮 跳转路径-->
             <el-menu-item index="/index">
                 <el-icon>
@@ -19,7 +19,7 @@
                 <span>个人中心</span>
             </el-menu-item>
             <!-- 二级菜单 -->
-            <el-sub-menu index="/userManage">
+            <el-sub-menu index="/userManage" v-admin>
                 <template #title>
                     <el-icon>
                         <UserFilled />
@@ -60,18 +60,36 @@
 // 导入图标
 import { HomeFilled, Avatar, UserFilled, MessageBox, Reading, Pointer } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex';
 // 拿到当前匹配到的路由对象
 const route = useRoute();
 // route.fullPath当前路径
-console.log(route.fullPath);
+// console.log(route.fullPath);
+
+// 用户权限控制
+const store = useStore();
+const vAdmin = {
+    mounted(el) {
+        // console.log(el)
+        if (store.state.userInfo.role !== 1) {
+            el.parentNode.removeChild(el)
+        }
+
+    }
+
+
+}
+
 
 </script>
 
 <style lang="scss" scoped>
 .el-aside {
     height: 100vh;
-    .el-menu{
+
+    .el-menu {
         height: 100vh;
+        border-right: none;
     }
 }
 </style>

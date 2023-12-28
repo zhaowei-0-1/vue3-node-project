@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-page-header content="添加产品" icon="" title="产品管理" />
+        <el-page-header content="编辑产品" @back="handleBack()" title="产品管理" />
 
         <el-form ref="productFormRef" :model="productForm" :rules="productFormRules" label-width="80px"
             class="demo-ruleForm" status-icon>
@@ -21,7 +21,7 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="submitForm()">添加产品</el-button>
+                <el-button type="primary" @click="submitForm()">编辑产品</el-button>
             </el-form-item>
         </el-form>
 
@@ -29,10 +29,11 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import upload from '@/util/upload';
 import Upload from '@/components/upload/Upload';
-import { useRouter } from 'vue-router';
+import { useRouter,useRoute } from 'vue-router';
+import axios from 'axios';
 
 const productFormRef = ref()
 const productForm = reactive({
@@ -65,6 +66,7 @@ const handleChange = file => {
 };
 
 const router = useRouter();
+const route = useRoute();
 
 // 提交
 const submitForm = () => {
@@ -72,10 +74,29 @@ const submitForm = () => {
         if (valid) {
             console.log(productForm, "productForm---")
             // 后台通信
-            await upload("/adminapi/product/add", productForm)
+            await upload("/adminapi/product/list", productForm)
             router.push(`/productManage/productlist`)
         }
     })
+}
+
+// 返回页面
+const handleBack = () => {
+    router.back()
+}
+
+// 取当前页面数据
+onMounted( () => {
+    getData()
+})
+
+const getData=async ()=>{
+    // console.log(route.params.id)
+    const res = await axios.get(`/adminapi/product/list/${route.params.id}`)
+    //  console.log(res.data.data[0])
+    // // 回显数据
+    Object.assign(productForm, res.data.data[0])
+
 }
 </script>
 

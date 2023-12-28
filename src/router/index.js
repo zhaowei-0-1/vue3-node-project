@@ -44,6 +44,9 @@ router.beforeEach((to, from, next) => {
       })
     } else {
       if (!store.state.isGetterRouter) {
+        // 删除所有嵌套路由
+        // main
+        router.removeRoute("main")
         ConfigRouter();
         next({
           path: to.fullPath,
@@ -55,18 +58,36 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+
 const ConfigRouter = () => {
+  if (!router.hasRoute("main")) {
+    router.addRoute({
+      path: '/main',
+      name: 'main',
+      component: Main,
+
+    })
+  }
   RoutesConfig.forEach(item => {
-    router.addRoute("main", item)
+    checkPermission(item) && router.addRoute("main", item)
   });
   // 改变isGetterRouter =true
   store.commit("changeGetterRouter", true)
 };
+
+const checkPermission = (item) => {
+  if (item.requireAdmin) {
+    return store.state.userInfo.role === 1
+
+  }
+  return true
+}
 // 动态 给Main 加了一个子路由
 // router.addRoute("Main",{
 //   path: '/index',
 //   component: Home,
 // })
+
 
 // 导出路由
 export default router

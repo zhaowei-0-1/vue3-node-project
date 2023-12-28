@@ -44,11 +44,12 @@ const submitForm = () => {
             // 接口连接，并将loginForm传给后端
             axios.post("/adminapi/user/login", loginForm).then(
                 res => {
-                    console.log(res.data, "==ActionType===")
+                    // console.log(res.data, "==ActionType===")
                     // ActionType==="ok"登录成功
                     if (res.data.ActionType === "ok") {
                         // console.log(res.data.data, "后端返数据")
                         store.commit("changeUserInfo", res.data.data)
+                        store.commit("changeUserInfo", false)
                         router.push("/index")
                         // localStorage.setItem("token", "admin");
                     } else {

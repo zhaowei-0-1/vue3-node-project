@@ -12,11 +12,6 @@
             <div v-if="scope.row.avatar">
               <el-avatar :size="40" :src="'http://localhost:3000/' + scope.row.avatar" />
             </div>
-
-            <!-- <div v-else>
-              <el-avatar :size="40" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" />
-
-            </div> -->
           </template>
         </el-table-column>
 

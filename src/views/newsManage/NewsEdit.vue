@@ -1,6 +1,7 @@
+<!-- 编辑新闻详情页 -->
 <template>
     <div>
-        <el-page-header content="创建新闻" icon="" title="新闻管理" />
+        <el-page-header content="编辑新闻" @back="handleBack()" title="新闻管理" />
 
         <el-form ref="newsFormRef" :model="newsForm" :rules="newsFormRules" label-width="80px" class="demo-ruleForm"
             status-icon>
@@ -9,7 +10,7 @@
             </el-form-item>
 
             <el-form-item label="内容" prop="content">
-                <editor @event="editorChange" />
+                <editor @event="editorChange" :content="newsForm.content" v-if="newsForm.content" />
             </el-form-item>
 
             <el-form-item label="类别" prop="category">
@@ -23,7 +24,7 @@
             </el-form-item>
 
             <el-form-item>
-                <el-button type="primary" @click="submitForm()">添加新闻</el-button>
+                <el-button type="primary" @click="submitForm()">编辑新闻</el-button>
             </el-form-item>
         </el-form>
 
@@ -31,11 +32,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import editor from '@/components/editor/Editor'
 import upload from '@/util/upload';
 import Upload from '@/components/upload/Upload';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
+import axios from 'axios';
 
 const newsFormRef = ref()
 const newsForm = reactive({
@@ -91,18 +93,34 @@ const handleChange = (file) => {
 }
 
 const router = useRouter();
+const route = useRoute();
 
 // 提交
 const submitForm = () => {
     newsFormRef.value.validate(async (valid) => {
         if (valid) {
-            console.log(newsForm, "newsForm---")
+            // console.log(newsForm, "newsForm---")
             // 后台通信
-            await upload("/adminapi/news/add", newsForm)
-            router.push(`/newsManage/newslist`)
+            await upload("/adminapi/news/list", newsForm)
+            router.back()
         }
     })
 }
+
+// 返回页面
+const handleBack = () => {
+    router.back()
+}
+// 取当前页面数据
+onMounted(async () => {
+    // console.log(route.params.id)
+    // 拿到后端数据
+    const res = await axios.get(`/adminapi/news/list/${route.params.id}`)
+    console.log(res.data.data[0])
+    // 回显数据
+    Object.assign(newsForm, res.data.data[0])
+
+})
 </script>
 
 <style scoped lang="scss">

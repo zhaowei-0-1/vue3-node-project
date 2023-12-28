@@ -71,6 +71,7 @@ const handleLogOut = () => {
     i {
         // 居中
         margin: auto;
+        cursor: pointer;
     }
 }
 

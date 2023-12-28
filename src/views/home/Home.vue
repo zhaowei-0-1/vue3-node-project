@@ -21,9 +21,14 @@
             </template>
 
             <!-- 走马灯 -->
-            <el-carousel :interval="4000" type="card" height="200px">
-                <el-carousel-item v-for="item in 6" :key="item">
-                    <h3 text="2xl" justify="center">{{ item }}</h3>
+            <el-carousel v-if="loopList.length" :interval="4000" type="card" height="300px">
+                <el-carousel-item v-for="item in loopList" :key="item._id">
+                    <div :style="{
+                        backgroundImage: `url(http://localhost:3000/${item.cover})`,
+                        backgroundSize: 'cover',
+                    }">
+                        <h3>{{ item.title }}</h3>
+                    </div>
                 </el-carousel-item>
             </el-carousel>
         </el-card>
@@ -32,7 +37,10 @@
 
 <script setup>
 import { useStore } from 'vuex'
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import axios from 'axios';
+
+const loopList = ref([])
 const store = useStore()
 // console.log(store.state ,"-store-")
 
@@ -40,6 +48,16 @@ const store = useStore()
 const avatarUrl = computed(() => store.state.userInfo.avatar ? 'http://localhost:3000' + store.state.userInfo.avatar : `https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png`)
 const welcomeText = computed(() => new Date().getHours() < 12 ? '早上好，开心每一天！' : '下午好，如果累了，就休息一会吧！')
 
+onMounted(() => {
+    getData()
+});
+
+const getData = async () => {
+    const res = await axios.get("/adminapi/product/list");
+    // console.log(res.data.data, "NEWS res.data ")
+    loopList.value = res.data.data
+    console.log(loopList.value)
+};
 </script>
 <style lang="scss" scoped>
 .box-card {
@@ -48,9 +66,9 @@ const welcomeText = computed(() => new Date().getHours() < 12 ? '早上好，开
 
 // 走马灯
 .el-carousel__item h3 {
-    color: #475669;
+    color: #fff;
     opacity: 0.75;
-    line-height: 200px;
+    line-height: 300px;
     margin: 0;
     text-align: center;
 }
